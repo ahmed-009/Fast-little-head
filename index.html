@@ -22,13 +22,14 @@ h2{font-size:22px;margin:0 0 10px}h3{font-size:17px;margin:0 0 6px}p{margin:6px 
 .r,.no{color:var(--r)}.a{color:var(--a)}.g,.ok{color:var(--g)}
 .st{padding:8px 12px;margin:6px 0;background:var(--bg);border-radius:8px;opacity:0;animation:f .4s forwards;animation-delay:var(--d)}@keyframes f{to{opacity:1}}
 .li{display:flex;justify-content:space-between;width:100%;padding:12px 0;background:none;border:0;border-top:1px solid var(--b);color:var(--t);font:inherit;text-align:start}.li:disabled{opacity:.4}
+.hm{display:grid;gap:3px;direction:ltr;margin:8px 0}.hm i{font-style:normal;font-size:10px;text-align:center;padding:6px 0;border-radius:5px;background:var(--b);color:var(--s)}.hm i.x1{background:var(--r);color:var(--bg)}.hm i.x2{background:var(--a);color:var(--bg)}.hm i.x3{background:var(--g);color:var(--bg)}.hm i.e{background:none}
 nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--c);border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom)}
 nav button{flex:1;padding:12px 2px;border:0;background:none;color:var(--s);font:inherit;font-size:13px}nav button.on{color:var(--p);font-weight:700}
 </style></head><body><main id="v"></main><nav id="nv"></nav>
 <script>
 const $=s=>document.querySelector(s),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),P=a=>a[R(0,a.length-1)],th=n=>n-n%10;
 let S;try{S=JSON.parse(localStorage.getItem('mm'))}catch(e){}
-S=S||{done:{},tested:{},sk:{},needs:{},T:{},base:{},log:{}};
+S=S||{done:{},tested:{},sk:{},needs:{},T:{},base:{},log:{}};S.it=S.it||{};
 const save=()=>{try{localStorage.setItem('mm',JSON.stringify(S))}catch(e){}},td=()=>new Date().toISOString().slice(0,10);
 const G={
 tab:l=>{const a=R(2,l>1?12:9),b=R(2,l>1?12:9);return{q:`${a} × ${b}`,a:a*b,tg:[a>5&&b>5?'أرقام كبيرة':'سهل'],h:`${a} × ${b} = ${a*b}`}},
@@ -61,12 +62,25 @@ L.forEach(l=>{if(K[l.id]){l.t=K[l.id][0];l.s=K[l.id][1];l.sk=l.id}});
 const seq=[];STG.forEach((n,s)=>{L.filter(l=>l.s==s).forEach(l=>seq.push({k:'l',id:l.id,s,t:l.t}));seq.push({k:'t',s,t:s?'اختبار: '+n:'اختبار البداية'})});
 const dn=x=>x.k=='l'?S.done[x.id]:S.tested[x.s],av=i=>i==0||dn(seq[i-1]);
 const T=s=>S.T[s]||(S.base[BM[s]]?Math.max(K[s][2],S.base[BM[s]]):K[s][2]*2);
-function M(s){const h=(S.sk[s]||{}).h||[];if(!h.length)return null;const t=T(s);return Math.round(100*(.6*h.reduce((a,x)=>a+x[0],0)/h.length+.4*h.reduce((a,x)=>a+(x[0]?Math.min(1,t/x[1]):0),0)/h.length))}
+function M(s){if(FQ[s]){const v=IK[s].map(k=>S.it[s+':'+k]).filter(Boolean);if(v.length>=8)return Math.round(20*v.reduce((a,r)=>a+r.b,0)/v.length)}const h=(S.sk[s]||{}).h||[];if(!h.length)return null;const t=T(s);return Math.round(100*(.6*h.reduce((a,x)=>a+x[0],0)/h.length+.4*h.reduce((a,x)=>a+(x[0]?Math.min(1,t/x[1]):0),0)/h.length))}
 const ST=m=>m==null?['—','s']:m<50?['ضعيف','r']:m<70?['متوسط','a']:m<85?['قوي','g']:['متقن','g'],LV=s=>{const m=M(s);return m==null||m<60?1:m<80?2:3};
 const wt=k=>Object.entries((S.sk[k]||{}).tg||{}).filter(([g,x])=>x[1]>=3&&x[0]/x[1]>.3).sort((a,b)=>b[1][0]/b[1][1]-a[1][0]/a[1][1]).map(x=>x[0])[0];
 function rec(s,ok,t,tg){const o=S.sk[s]=S.sk[s]||{h:[],tg:{}};o.h.push([ok?1:0,+t.toFixed(1)]);if(o.h.length>20)o.h.shift();(tg||[]).forEach(g=>{const x=o.tg[g]=o.tg[g]||[0,0];x[1]++;if(!ok)x[0]++});const d=td();S.log[d]=(S.log[d]||0)+Math.min(t,60)}
 function chk(s){if(!S.done[s])return;const h=(S.sk[s]||{}).h||[];if(h.length<12)return;const l=h.slice(-12),acc=l.reduce((a,x)=>a+x[0],0)/12,ts=l.filter(x=>x[0]).map(x=>x[1]),av_=ts.length?ts.reduce((a,b)=>a+b)/ts.length:99;if(acc<.6||av_>2*T(s))S.needs[s]=1;save()}
-const mk=(s,l)=>{const o=G[s](l);o.sk=s;return o};
+const IK={tab:[],sq:[],comp:[]};for(let a=2;a<=12;a++)for(let b=a;b<=12;b++)IK.tab.push(a+'-'+b);for(let n=2;n<=25;n++)IK.sq.push(''+n);for(let n=1;n<=99;n++)if(n%10)IK.comp.push(''+n);
+const FQ={tab:k=>{const[a,b]=k.split('-').map(Number),f=Math.random()<.5,x=f?a:b,y=f?b:a;return{q:`${x} × ${y}`,a:a*b,tg:[a>5&&b>5?'أرقام كبيرة':'سهل'],h:`${x} × ${y} = ${a*b}`}},sq:k=>{const n=+k;return{q:`${n}²`,a:n*n,tg:[n>15?'فوق 15':'لحد 15'],h:`${n} × ${n} = ${n*n}`}},comp:k=>{const n=+k;return{q:`100 − ${n}`,a:100-n,tg:[n%10>5?'آحاد كبيرة':'عادي'],h:`كمّل الآحاد لـ10 والعشرات لـ9 = ${100-n}`}}};
+const DAYS=[0,1,3,7,14,30];
+function updI(s,k,ok,t){const id=s+':'+k,r=S.it[id],f=ok&&t<=T(s)*1.15;let b=!r?(f?3:ok?1:0):f?Math.min(5,r.b+1):ok?r.b:0;S.it[id]={b,t:+(r?.6*r.t+.4*t:t).toFixed(1),n:r?r.n+1:1,d:Date.now()+(f?DAYS[b]*864e5:ok?6e5:0)}}
+function pickItem(s){const now=Date.now(),A=[],B=[],C=[];IK[s].forEach(k=>{if(Q.rc.includes(s+':'+k))return;const r=S.it[s+':'+k];(!r||r.d<=now||r.b<=1?A:r.b<=3?B:C).push(k)});const x=Math.random();let p=x<.6?A:x<.85?B:C;if(!p.length)p=A.length?A:B.length?B:C;if(!p.length)return P(IK[s]);const w=p.map(k=>{const r=S.it[s+':'+k];return r?6-r.b:2});let r=Math.random()*w.reduce((a,b)=>a+b);for(let i=0;i<p.length;i++){r-=w[i];if(r<=0)return p[i]}return p[0]}
+function twin(s,tg){let q;for(let i=0;i<8;i++){q=mk(s,LV(s));if(!tg||!tg.length||q.tg.includes(tg[0]))break}return q}
+function nextQ(s,p){const e=Q.rq.findIndex(x=>x.at<=Q.i);let q;
+if(e>=0){const x=Q.rq.splice(e,1)[0];q=x.key?FQ[x.s](x.key):twin(x.s,x.tg);q.sk=x.s;q.key=x.key;q.rg=x.g;q.lb='بترجع تاني';return q}
+const k=s||pick(p.length>1?p.filter(x=>x!=Q.last):p);
+if(FQ[k]){const key=pickItem(k),r=S.it[k+':'+key];q=FQ[k](key);q.key=key;q.sk=k;q.lb=!r?'جديدة':r.b<=1?'ضعيفة':r.d<=Date.now()?'مراجعة':''}
+else{for(let i=0;i<6;i++){q=mkw(k);if(!Q.seen.includes(q.q))break}Q.seen.push(q.q);if(Q.seen.length>60)Q.seen.shift()}
+Q.rc.push(k+':'+(q.key||q.q));if(Q.rc.length>8)Q.rc.shift();return q}
+function hm(k){const ks=IK[k],it=x=>S.it[k+':'+x],c=x=>{const r=it(x);return!r?'':r.b<=1?'x1':r.b<=3?'x2':'x3'};let cells='';if(k=='tab'){for(let a=2;a<=12;a++)for(let b=2;b<=12;b++)cells+=a<=b?`<i class="${c(a+'-'+b)}">${a}×${b}</i>`:'<i class="e"></i>'}else cells=ks.map(x=>`<i class="${c(x)}">${x}</i>`).join('');return`<div class="hm" style="grid-template-columns:repeat(${k=='tab'?11:k=='sq'?8:9},1fr)">${cells}</div><div class="s">غطّيت ${ks.filter(x=>it(x)).length} من ${ks.length} · أحمر ضعيف، برتقالي متوسط، أخضر قوي، رمادي لسه</div>`}
+const mk=(s,l)=>{if(FQ[s]){const k=P(IK[s]),o=FQ[s](k);o.sk=s;o.key=k;return o}const o=G[s](l);o.sk=s;return o};
 function mkw(s){const w=wt(s);let q;for(let i=0;i<8;i++){q=mk(s,LV(s));if(!w||q.tg.includes(w))break}return q}
 function pick(pool){const w=pool.map(s=>{const m=M(s);return 1+(m==null?1:(100-m)/20)+(S.needs[s]?1.5:0)});let r=Math.random()*w.reduce((a,b)=>a+b);for(let i=0;i<pool.length;i++){r-=w[i];if(r<=0)return pool[i]}return pool[0]}
 const V=h=>{$('#v').innerHTML=h;scrollTo(0,0)};
@@ -76,12 +90,12 @@ function go(t){if(Q)Q.dead=1;if(IN){IN=0;SK=1;history.back()}TAB=t;nav(t);({h:ho
 addEventListener('popstate',()=>{if(SK){SK=0;return}if(IN){IN=0;go(TAB)}});
 const one=(s,r)=>{const k=r.filter(x=>x.ok).length,tm=(r.reduce((a,x)=>a+x.t,0)/r.length).toFixed(1),m=M(s),[n,c]=ST(m);return`<div class="rw"><span>${K[s][0]}</span><span>${k}/${r.length} · ${tm} ث · <b class="${c}">${n} ${m??''}</b></span></div>`},grp=r=>[...new Set(r.map(x=>x.s))].map(k=>one(k,r.filter(x=>x.s==k))).join('');
 let Q,LN,NX,NX2;
-function quiz(o){Q={o,i:0,res:[]};nq()}
-function nq(){const o=Q.o;if(Q.i>=o.n){Q.dead=1;return o.end(Q.res)}let q;for(let k=0;k<3;k++){q=o.next();if(q.sk!=Q.last)break}Q.last=q.sk;Q.q=q;Q.u='';Q.lock=0;Q.t0=Date.now();
-V(`${o.pg||''}<div class="cd"><div class="s">${o.hd||''}${isFinite(o.n)&&o.n>1?` · ${Q.i+1}/${o.n}`:''}</div><div class="m" dir="auto">${q.q}</div><div class="an" id="an">&nbsp;</div></div><div class="kp">${[1,2,3,4,5,6,7,8,9,'⌫',0,'✓'].map(k=>`<button onclick="key('${k}')">${k}</button>`).join('')}</div>${isFinite(o.n)?'':'<button class="bt o" onclick="endQ()">إنهاء الجلسة</button>'}`)}
+function quiz(o){Q={o,i:0,res:[],rq:[],seen:[],rc:[]};nq()}
+function nq(){const o=Q.o;if(Q.i>=o.n){Q.dead=1;return o.end(Q.res)}let q;for(let k=0;k<(o.rq?1:3);k++){q=o.next();if(q.sk!=Q.last)break}Q.last=q.sk;Q.q=q;Q.u='';Q.lock=0;Q.t0=Date.now();
+V(`${o.pg||''}<div class="cd"><div class="s">${o.hd||''}${isFinite(o.n)&&o.n>1?` · ${Q.i+1}/${o.n}`:''}</div>${q.lb?`<div class="s" style="text-align:center">${q.lb}</div>`:''}<div class="m" dir="auto">${q.q}</div><div class="an" id="an">&nbsp;</div></div><div class="kp">${[1,2,3,4,5,6,7,8,9,'⌫',0,'✓'].map(k=>`<button onclick="key('${k}')">${k}</button>`).join('')}</div>${isFinite(o.n)?'':'<button class="bt o" onclick="endQ()">إنهاء الجلسة</button>'}`)}
 function key(k){if(Q.lock||Q.dead)return;if(k=='✓'){if(Q.u)sub();return}if(k=='⌫')Q.u=Q.u.slice(0,-1);else if(Q.u.length<8)Q.u+=k;$('#an').textContent=Q.u||'\u00a0'}
 const nq0=()=>{if(!Q.dead)nq()},lat=()=>{const z=Q;setTimeout(()=>z==Q&&nq0(),650)},endQ=()=>{Q.dead=1;Q.o.end(Q.res)};
-function sub(){const q=Q.q,o=Q.o,t=(Date.now()-Q.t0)/1000,ok=+Q.u==q.a,e=$('#an');Q.res.push({s:q.sk,ok,t,q:q.q,u:Q.u,a:q.a,h:q.h});if(!o.nr)for(let r=0;r<(o.w||1);r++)rec(q.sk,ok,t,q.tg);save();Q.i++;Q.lock=1;
+function sub(){const q=Q.q,o=Q.o,t=(Date.now()-Q.t0)/1000,ok=+Q.u==q.a,e=$('#an');Q.res.push({s:q.sk,ok,t,q:q.q,u:Q.u,a:q.a,h:q.h});if(!o.nr)for(let r=0;r<(o.w||1);r++)rec(q.sk,ok,t,q.tg);if(q.key)updI(q.sk,q.key,ok,t);if(o.rq){const f=ok&&t<=T(q.sk)*1.15,x={s:q.sk,key:q.key,tg:q.tg};if(!f)Q.rq.push({...x,at:Q.i+4,g:0});else if(q.rg===0)Q.rq.push({...x,at:Q.i+9,g:1})}save();Q.i++;Q.lock=1;
 if(ok){e.innerHTML=`<span class="ok">✓ ${t.toFixed(1)} ث</span>`;lat()}else if(o.fb=='sol')e.innerHTML=`<span class="no">✗</span><div class="sl" dir="auto">${q.h}</div><button class="bt" onclick="nq0()">التالي</button>`;else{e.innerHTML='<span class="no">✗</span>';lat()}}
 function lesson(id,rem){inner();const l=L.find(x=>x.id==id);LN={l,i:0,ex:0,rem,c:l.c.map(c=>({k:c[0],h:c[1],b:c[2],x:c[3]}))};if(l.sk){for(let i=0;i<(rem?5:3);i++)LN.c.push({k:'f'});LN.c.push({k:rem?'ex':'ch'})}lc()}
 function lc(){const{l,c:cs,i}=LN,c=cs[i];
@@ -99,8 +113,8 @@ function home(){const x=seq.find(x=>!dn(x)),m=Math.round((S.log[td()]||0)/60),n=
 function path(){V('<h2>المسار</h2>'+STG.map((n,s)=>`<div class="cd"><h3>${s}. ${n}</h3>${seq.map((x,i)=>x.s==s?`<button class="li" ${av(i)?'':'disabled'} onclick="${x.k=='l'?`lesson('${x.id}')`:`tst(${s})`}"><span>${x.t}</span><span class="${dn(x)?'g':'s'}">${dn(x)?'تم':av(i)?'متاح':'مقفول'}</span></button>`:'').join('')}</div>`).join('')+'<p class="s">مراحل 3 إلى 6 جاية في الدفعات الجاية.</p>')}
 const pool=()=>Object.keys(K).filter(k=>S.done[k]&&K[k][1]>0);
 function prac(){const p=pool();V(p.length?`<h2>التدريب</h2><div class="cd"><p class="s">أسئلة لا نهائية من الدروس اللي خلّصتها بس، والأضعف بتيجي أكتر.</p><button class="bt" onclick="pr()">اخلط</button></div><div class="cd"><h3>تقنية محددة</h3>${p.map(s=>`<button class="bt o" onclick="pr('${s}')">${K[s][0]}</button>`).join('')}</div>`:'<h2>التدريب</h2><div class="cd">التدريب بيفتح بعد ما تخلّص أول درس تقنية، والأسئلة بتيجي من الدروس اللي خلّصتها بس.</div>')}
-function pr(s){inner();const p=pool();quiz({n:Infinity,fb:'sol',hd:s?K[s][0]:'تدريب مخلوط',next:()=>{const k=s||pick(p);return mk(k,LV(k))},end:r=>{if(!r.length)return go('q');[...new Set(r.map(x=>x.s))].forEach(chk);V(`<div class="cd"><h2>ملخص الجلسة</h2>${grp(r)}</div><button class="bt" onclick="go('q')">رجوع</button>`);nav('q')}})}
-function skills(){V('<h2>مهاراتي</h2>'+[1,2].map(s=>`<div class="cd"><h3>${STG[s]}</h3>${Object.keys(K).filter(k=>K[k][1]==s).map(k=>{if(!S.done[k])return`<div class="rw s"><span>${K[k][0]}</span><span>مقفول</span></div>`;const h=(S.sk[k]||{}).h||[],m=M(k),[n,c]=ST(m),acc=h.length?Math.round(100*h.reduce((a,x)=>a+x[0],0)/h.length):0,w=wt(k);return`<div class="rw"><span>${K[k][0]}</span><b class="${c}">${n} ${m??''}</b></div><div class="pg"><i class="${c}" style="width:${m||0}%"></i></div><div class="s">دقة ${acc}% · الهدف ${T(k).toFixed(1)} ث${w?' · بتغلط في: '+w:''}</div>`}).join('')}</div>`).join(''))}
+function pr(s){inner();const p=pool();quiz({n:Infinity,fb:'sol',rq:1,hd:s?K[s][0]:'تدريب مخلوط',next:()=>nextQ(s,p),end:r=>{if(!r.length)return go('q');[...new Set(r.map(x=>x.s))].forEach(chk);V(`<div class="cd"><h2>ملخص الجلسة</h2>${grp(r)}</div><button class="bt" onclick="go('q')">رجوع</button>`);nav('q')}})}
+function skills(){V('<h2>مهاراتي</h2>'+[1,2].map(s=>`<div class="cd"><h3>${STG[s]}</h3>${Object.keys(K).filter(k=>K[k][1]==s).map(k=>{if(!S.done[k])return`<div class="rw s"><span>${K[k][0]}</span><span>مقفول</span></div>`;const h=(S.sk[k]||{}).h||[],m=M(k),[n,c]=ST(m),acc=h.length?Math.round(100*h.reduce((a,x)=>a+x[0],0)/h.length):0,w=wt(k);return`<div class="rw"><span>${K[k][0]}</span><b class="${c}">${n} ${m??''}</b></div><div class="pg"><i class="${c}" style="width:${m||0}%"></i></div><div class="s">دقة ${acc}% · الهدف ${T(k).toFixed(1)} ث${w?' · بتغلط في: '+w:''}</div>${FQ[k]?hm(k):''}`}).join('')}</div>`).join(''))}
 const nr=k=>{const l=((S.sk[k]||{}).h||[]).slice(-12),w=wt(k);return`غلطت ${l.filter(x=>!x[0]).length} من آخر ${l.length}${w?'، أغلبها في: '+w:''}`};
 function needs(){const ks=Object.keys(S.needs).sort((a,b)=>(M(a)??0)-(M(b)??0));V('<h2>الاحتياجات</h2>'+(ks.length?ks.slice(0,3).map(k=>`<div class="cd"><h3>${K[k][0]}</h3><p class="s">${nr(k)}</p><button class="bt" onclick="lesson('${k}',1)">افتح الدرس وامتحنّي</button></div>`).join('')+(ks.length>3?`<p class="s">وفيه ${ks.length-3} في الطابور.</p>`:''):'<div class="cd">مفيش احتياجات دلوقتي.</div>'))}
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
